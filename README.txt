@@ -1,0 +1,22 @@
+REDAME file for the clone module for Drupal 4.7.
+
+The clone module allows users to make a copy of an existing node and then edit 
+that copy. The authorship is set to the current user, the menu and url aliases 
+are reset, and the words "Clone of" are inserted into the title to remind you 
+that you are not editing the original node.
+
+Users with the "clone node" permission can utilize this functionality. A new
+tab will appear on node pages with the word "clone".  Once you click this
+tab you have *already* created a new node that is a copy of the node you were
+viewing, and you will be redirected to an edit screen for that new node.
+
+This module seems to work with common node types, however YMMV. File 
+attachments are not included in the cloned node.  Seems to produce
+functional clones of forms made using webform. In all cases, but especially
+if you are using a complex or custom node type, you should evaluate this
+module on a test site with a copy of your database before attempting to use
+it on a live site.
+
+Note: this module derived from code posted by Steve Ringwood (nevets@drupal) at 
+http://drupal.org/node/73381#comment-137714
+
