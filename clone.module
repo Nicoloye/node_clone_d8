@@ -27,10 +27,15 @@ function clone_menu($may_cache) {
 
   if (!$may_cache) { 
     if (arg(0) == 'node' && is_numeric(arg(1))){
-         $items[] = array('path' => 'node/'. arg(1).'/clone', 'title' => t('clone'),
-        'callback' => 'clone_node', 'access' => TRUE,
-        'type' => MENU_LOCAL_TASK, 'weight' => 5); 
+         $node=node_load(arg(1));
+         if ($node->nid) {
+           $access = (user_access('clone node') && filter_access($node->format) && node_access('create',$node->type));
+           $items[] = array('path' => 'node/'. $node->nid.'/clone', 'title' => t('clone'),
+          'callback' => 'clone_node', 'access' => $access,
+          'type' => MENU_LOCAL_TASK, 'weight' => 5); 
+         }
     }
+
   }
 
   return $items;
@@ -45,7 +50,7 @@ function clone_node()
     $node = node_load($nid);
    
     $node->nid = NULL;
-    $node->name = $user->name;
+    $node->uid = $user->uid;
     $node->created = 0;
     
     $node->menu = NULL;
@@ -57,4 +62,4 @@ function clone_node()
    
     drupal_goto('node/'. $node->nid . '/edit');
 }
-   
+
