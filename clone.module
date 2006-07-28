@@ -27,15 +27,15 @@ function clone_menu($may_cache) {
 
   if (!$may_cache) { 
     if (arg(0) == 'node' && is_numeric(arg(1))){
-         $node=node_load(arg(1));
-         if ($node->nid) {
-           $access = (user_access('clone node') && filter_access($node->format) && node_access('create',$node->type));
-           $items[] = array('path' => 'node/'. $node->nid.'/clone', 'title' => t('clone'),
-          'callback' => 'clone_node', 'access' => $access,
-          'type' => MENU_LOCAL_TASK, 'weight' => 5); 
-         }
+       $node=node_load(arg(1));
+       if ($node->nid) {
+         $access = (user_access('clone node') && filter_access($node->format) && node_access('create',$node->type));
+         $items[] = array('path' => 'node/'. $node->nid.'/clone', 
+                          'title' => t('clone'),
+                          'callback' => 'clone_node', 'access' => $access,
+                          'type' => MENU_LOCAL_TASK, 'weight' => 5,); 
+       }
     }
-
   }
 
   return $items;
@@ -45,17 +45,14 @@ function clone_node()
 {
     global $user;
    
-    $nid=arg(1);
-    
+    $nid=arg(1);    
     $node = node_load($nid);
    
     $node->nid = NULL;
     $node->uid = $user->uid;
-    $node->created = 0;
-    
+    $node->created = 0;   
     $node->menu = NULL;
-    $node->path = NULL;
-    
+    $node->path = NULL;   
     $node->title = 'Clone of '.$node->title;
    
     node_save($node);
