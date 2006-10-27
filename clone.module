@@ -9,8 +9,6 @@ function clone_help($section) {
       $output = '<p>'. t('The clone module allows users to make a copy of an existing node and then edit that copy. The authorship is set to the current user, the menu and url aliases are reset, and the words "Clone of" are inserted into the title to remind you that you are not editing the original node.') .'</p>';
       $output .= '<p>'. t('Users with the "clone node" permission can utilize this functionality. A new tab will appear on node pages with the word "clone". Once you click this tab you have <em>already</em> created a new node that is a copy of the node you were viewing, and you will be redirected to an edit screen for that new node.') .'</p>';
       return $output;
-    case 'admin/modules#description':
-      return t('Allows users to clone (copy then edit) an existing node.');
   }
 }
 
@@ -27,7 +25,17 @@ function clone_perm() {
 function clone_menu($may_cache) {
   $items = array();
 
-  if (!$may_cache) { 
+  if ($may_cache) {  
+    $items[] = array(
+       'path' => 'admin/settings/clone',
+       'title' => t('Clone module'),
+       'description' => t('Allows users to clone (copy then edit) an existing node.'),
+       'callback' => 'drupal_get_form',
+       'callback arguments' => 'clone_settings',
+       'access' => user_access('administer site configuration'), 
+      );
+  }
+  else { 
     if (arg(0) == 'node' && is_numeric(arg(1))){
        $node=node_load(arg(1));
        if ($node->nid) {
@@ -71,7 +79,7 @@ function clone_settings() {
     );    
   }
 
-  return $form;
+  return system_settings_form($form);
 }
 
 /**
