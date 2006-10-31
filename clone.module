@@ -73,11 +73,11 @@ function clone_settings() {
     '#title' => '<b>'.t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?').'</b>',
   );
   
-  foreach (node_get_types() as $type => $name) {
-    $form['publishing']['clone_reset_'. $type] = array(
+  foreach (node_get_types() as $type_obj) {
+    $form['publishing']['clone_reset_'. $type_obj->type] = array(
       '#type' => 'checkbox',
-      '#title' => t('%s: reset publishing options when cloned', array('%s' => $name)),
-      '#default_value' => variable_get('clone_reset_'. $type, FALSE),
+      '#title' => t('@s: reset publishing options when cloned', array('@s' => $type_obj->name)),
+      '#default_value' => variable_get('clone_reset_'. $type_obj->type, FALSE),
     );    
   }
 
