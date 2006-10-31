@@ -40,10 +40,12 @@ function clone_menu($may_cache) {
        $node=node_load(arg(1));
        if ($node->nid) {
          $access = (user_access('clone node') && filter_access($node->format) && node_access('create',$node->type));
-         $items[] = array('path' => 'node/'. $node->nid.'/clone', 
-                          'title' => t('clone'),
-                          'callback' => 'clone_node_confirm', 'access' => $access,
-                          'type' => MENU_LOCAL_TASK, 'weight' => 5,); 
+         $items[] = array(
+           'path' => 'node/'. $node->nid.'/clone', 
+           'title' => t('clone'),
+           'callback' => 'clone_node_check', 
+           'access' => $access,
+           'type' => MENU_LOCAL_TASK, 'weight' => 5,); 
        }
     }
   }
@@ -52,7 +54,7 @@ function clone_menu($may_cache) {
 }
 
 /**
-* Implementation of hook_settings().
+* menu callback to configure module settings.
 */
 function clone_settings() {
 
@@ -85,21 +87,26 @@ function clone_settings() {
 /**
  *  Menu callback: prompt the user to confirm the operation
  */
-function clone_node_confirm() {
+function clone_node_check() {
   
   if (variable_get('clone_nodes_without_confirm', FALSE)) {
     clone_node(arg(1));
+    return;
   }
-  else {
+  return drupal_get_form('clone_node_confirm');
+}
+
+/**
+ *  form builder: prompt the user to confirm the operation
+ */
+function clone_node_confirm() {
+  
     $node = node_load(arg(1)); 
     $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
-    $output = confirm_form('clone_node_confirm', $form,
-      t('Are you sure you want to clone %title?', array('%title' => theme('placeholder', $node->title))),
+    return confirm_form($form,
+      t('Are you sure you want to clone %title?', array('%title' =>  $node->title)),
       'node/'. $node->nid,'<p>'. t('This action will create a new node. You willl then be redirected to the edit page for the new node.'). '</p>',
       t('Clone'), t('Cancel'));
-    
-    return $output;
-  }
 }
 
 /**
@@ -128,7 +135,7 @@ function clone_node($nid)
       $node->created = 0;   
       $node->menu = NULL;
       $node->path = NULL;   
-      $node->title = t('Clone of %title', array('%title' => $node->title));
+      $node->title = t('Clone of @title', array('@title' => $node->title));
       
       if (variable_get('clone_reset_'. $node->type, FALSE)) {
         $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
