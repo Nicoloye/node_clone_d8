@@ -85,6 +85,26 @@ function clone_settings() {
 }
 
 /**
+ * Implementation of hook_mode_type().
+ */
+function clone_node_type($op, $type_obj) {
+
+  switch ($op){
+    case 'delete':
+      variable_del('clone_reset_'. $type_obj->type);
+      break;
+    case 'update':
+      if (!empty($type_obj->old_type) && $type_obj->old_type != $type_obj->type) {
+        if (variable_get('clone_reset_'. $type_obj->old_type, FALSE)) {
+          variable_del('clone_reset_'. $type_obj->old_type);
+          variable_set('clone_reset_'. $type_obj->type, TRUE);
+        }
+      }
+      break;
+  }
+}
+
+/**
  *  Menu callback: prompt the user to confirm the operation
  */
 function clone_node_check() {
