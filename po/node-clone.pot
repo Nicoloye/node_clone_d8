@@ -1,0 +1,77 @@
+#
+# LANGUAGE translation of Drupal (modules/node_clone/clone.module)
+# Copyright 2007 Alexander Hass
+# Generated from file: clone.info,v 1.2 2006/10/31 02:57:17 pwolanin
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: node_clone 5.x\n"
+"POT-Creation-Date: 2007-02-09 12:54+0100\n"
+"PO-Revision-Date: 2007-02-10 23:26+0100\n"
+"Last-Translator: Alexander Hass\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clone.module:9
+msgid "The clone module allows users to make a copy of an existing node and then edit that copy. The authorship is set to the current user, the menu and url aliases are reset, and the words \"Clone of\" are inserted into the title to remind you that you are not editing the original node."
+msgstr ""
+
+#: clone.module:10
+msgid "Users with the \"clone node\" permission can utilize this functionality. A new tab will appear on node pages with the word \"clone\". Once you click this tab you have <em>already</em> created a new node that is a copy of the node you were viewing, and you will be redirected to an edit screen for that new node."
+msgstr ""
+
+#: clone.module:31
+msgid "Clone module"
+msgstr ""
+
+#: clone.module:32
+#: clone.info:0
+msgid "Allows users to clone (copy then edit) an existing node."
+msgstr ""
+
+#: clone.module:45;0
+msgid "clone"
+msgstr ""
+
+#: clone.module:62
+msgid "Configuration options for the clone module:"
+msgstr ""
+
+#: clone.module:66
+msgid "Clone nodes without requiring confirmation"
+msgstr ""
+
+#: clone.module:68
+msgid "If this is set, a new node will be created immediately upon clicking the \"clone\" tab when viewing a node."
+msgstr ""
+
+#: clone.module:73
+msgid "Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?"
+msgstr ""
+
+#: clone.module:79
+msgid "@s: reset publishing options when cloned"
+msgstr ""
+
+#: clone.module:127
+msgid "Are you sure you want to clone %title?"
+msgstr ""
+
+#: clone.module:128
+msgid "This action will create a new node. You willl then be redirected to the edit page for the new node."
+msgstr ""
+
+#: clone.module:129
+msgid "Clone"
+msgstr ""
+
+#: clone.module:158
+msgid "Clone of @title"
+msgstr ""
+
+#: clone.module:19
+msgid "Clone node"
+msgstr ""
+
