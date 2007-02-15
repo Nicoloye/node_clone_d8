@@ -1,3 +1,4 @@
 ; $Id$
 name = Clone module
 description = "Allows users to clone (copy then edit) an existing node."
+version = "$Name$"
