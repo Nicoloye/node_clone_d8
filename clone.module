@@ -111,6 +111,7 @@ function clone_node($nid)
     if (isset($node->nid)) {
       
       $node->nid = NULL;
+      $node->name = $user->name;
       $node->uid = $user->uid;
       $node->created = NULL;   
       $node->menu = NULL;
