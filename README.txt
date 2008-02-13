@@ -1,4 +1,6 @@
-REDAME file for the clone module for Drupal 5.x.
+$Id$
+
+README file for the clone module for Drupal 5.x.
 
 5.x-2.x branch.
 
@@ -28,9 +30,9 @@ evaluate this module on a test site with a copy of your database before
 attempting to use it on a live site.
 
 To install this module, copy the folder with the .info and .module files to the 
-/sites/all  OR /modules directory of your Drupal installation and enable it at 
-/admin/build/modules.  A new permission is available, but there are no changes 
-to the database structure.
+/sites/all/modules  OR /modules directory of your Drupal installation and enable
+it at /admin/build/modules.  A new permission is available, but there are no 
+changes to the database structure.
 
 Note: this module originally derived from code posted by Steve Ringwood 
 (nevets@drupal) at http://drupal.org/node/73381#comment-137714
