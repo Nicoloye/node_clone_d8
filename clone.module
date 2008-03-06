@@ -16,8 +16,8 @@ function clone_help($path, $arg) {
 }
 
 /**
-* Implementation of hook_perm().
-*/
+ * Implementation of hook_perm().
+ */
 function clone_perm() {
   return array('clone node');
 }
@@ -44,12 +44,12 @@ function clone_menu() {
     'file path' => drupal_get_path('module', 'node'),
     'type' => MENU_LOCAL_TASK,
   );
-   return $items;
- }
+  return $items;
+}
 
 function clone_access($node) {
   $access = (user_access('clone node') && clone_is_permitted($node->type) &&
-    filter_access($node->format) && node_access('create',$node->type));
+    filter_access($node->format) && node_access('create', $node->type));
   // Let other modules alter this - for exmple to only allow some users
   // to clone specific nodes or types.
   drupal_alter("clone_access", $access, $node);
@@ -61,17 +61,17 @@ function clone_is_permitted($type) {
 }
 
 /**
-* menu callback to configure module settings.
-*/
+ * menu callback to configure module settings.
+ */
 function clone_settings() {
 
   $form['heading'] = array(
-    '#value' => '<b>'.t('Configuration options for the clone module:').'</b>',
+    '#value' => '<b>'. t('Configuration options for the clone module:') .'</b>',
   );
 
   $form['publishing'] = array(
     '#type' => 'fieldset',
-    '#title' => '<b>'.t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?').'</b>',
+    '#title' => '<b>'. t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?') .'</b>',
   );
   $types = node_get_types('names');
 
@@ -101,7 +101,7 @@ function clone_settings() {
  */
 function clone_node_type($op, $type_obj) {
 
-  switch ($op){
+  switch ($op) {
     case 'delete':
       variable_del('clone_reset_'. $type_obj->type);
       break;
@@ -119,8 +119,7 @@ function clone_node_type($op, $type_obj) {
 /**
  *  Clones a node - prepopulate a node editing form
  */
-function clone_node($node)
-{
+function clone_node($node) {
   if (isset($node->nid)) {
     global $user;
 
