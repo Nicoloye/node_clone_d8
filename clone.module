@@ -46,7 +46,7 @@ function clone_menu() {
   );
    return $items;
  }
- 
+
 function clone_access($node) {
   $access = (user_access('clone node') && clone_is_permitted($node->type) &&
     filter_access($node->format) && node_access('create',$node->type));
@@ -74,22 +74,22 @@ function clone_settings() {
     '#title' => '<b>'.t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?').'</b>',
   );
   $types = node_get_types('names');
- 
+
   foreach ($types as $type => $name) {
     $form['publishing']['clone_reset_'. $type] = array(
       '#type' => 'checkbox',
       '#title' => t('@s: reset publishing options when cloned', array('@s' => $name)),
       '#default_value' => variable_get('clone_reset_'. $type, FALSE),
-    );    
+    );
   }
   // Need the variable default key to be something that's never a valid node type.
-  $types = array_merge( array('!' => "<". t("none") .">"), $types); 
+  $types = array_merge( array('!' => "<". t("none") .">"), $types);
   $form['clone_omitted'] = array(
-    '#type' => 'select', 
-    '#title' => t('Omitted content types'), 
-    '#default_value' => variable_get('clone_omitted', array('!')), 
-    '#options' => $types, 
-    '#description' => t('Select any node types which should <em>never</em> be cloned. Typically you should will want to select here all node types for which cloning fails (e.g. image nodes).'), 
+    '#type' => 'select',
+    '#title' => t('Omitted content types'),
+    '#default_value' => variable_get('clone_omitted', array('!')),
+    '#options' => $types,
+    '#description' => t('Select any node types which should <em>never</em> be cloned. Typically you should will want to select here all node types for which cloning fails (e.g. image nodes).'),
     '#multiple' => TRUE
   );
 
@@ -123,7 +123,7 @@ function clone_node($node)
 {
   if (isset($node->nid)) {
     global $user;
-    
+
     if (clone_is_permitted($node->type)) {
       // Let other modules do special fixing up.
       drupal_alter("clone_node", $node, "prepopulate");
@@ -132,22 +132,22 @@ function clone_node($node)
       $node->vid = NULL;
       $node->name = $user->name;
       $node->uid = $user->uid;
-      $node->created = NULL;   
+      $node->created = NULL;
       $node->menu = NULL;
       $node->book['mlid'] = NULL;
       $node->path = NULL;
       $node->files = array();
       $node->title = t('Clone of !title', array('!title' => $node->title));
       drupal_set_title(check_plain($node->title));
-      
+
       if (variable_get('clone_reset_'. $node->type, FALSE)) {
         $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
         // fill in the default values
         foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
           $node->$key = in_array($key, $node_options);
-        } 
+        }
       }
-      return  drupal_get_form($node->type .'_node_form', $node); 
+      return  drupal_get_form($node->type .'_node_form', $node);
     }
   }
 }
