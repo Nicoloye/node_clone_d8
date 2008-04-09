@@ -72,7 +72,7 @@ function clone_settings() {
 
   $form['publishing'] = array(
     '#type' => 'fieldset',
-    '#title' => '<b>'. t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?') .'</b>',
+    '#title' => t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?'),
   );
   $types = node_get_types('names');
 
