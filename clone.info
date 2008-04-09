@@ -1,4 +1,5 @@
 ; $Id$
+; $Name$
 name = Clone module
 description = "Allows users to clone (copy then edit) an existing node."
 core = 6.x
