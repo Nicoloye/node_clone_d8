@@ -20,7 +20,7 @@ function clone_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function clone_perm() {
-  return array('clone node');
+  return array('clone node', 'clone own nodes');
 }
 
 /**
@@ -49,8 +49,11 @@ function clone_menu() {
 }
 
 function clone_access($node) {
-  $access = (user_access('clone node') && clone_is_permitted($node->type) &&
-    filter_access($node->format) && node_access('create', $node->type));
+  global $user;
+  // Check basic permissions first.
+  $access = (user_access('clone node') || ($user->uid && ($node->uid == $user->uid) && user_access('clone own nodes')));
+  // Check additional conditions
+  $access = $access && (clone_is_permitted($node->type) && filter_access($node->format) && node_access('create', $node->type));
   // Let other modules alter this - for exmple to only allow some users
   // to clone specific nodes or types.
   drupal_alter("clone_access", $access, $node);
@@ -94,6 +97,11 @@ function clone_settings() {
     '#multiple' => TRUE
   );
 
+  $form['clone_method'] = array(
+    '#type' => 'value',
+    '#value' => 'prepopulate',
+  );
+
   return system_settings_form($form);
 }
 
@@ -126,6 +134,8 @@ function clone_node($node) {
 
     if (clone_is_permitted($node->type)) {
       // Let other modules do special fixing up.
+      // The function signature is: hook_clone_node_alter(&$node, $method)
+      // Where method is either 'prepopulate' or 'save-edit'.
       drupal_alter("clone_node", $node, "prepopulate");
 
       $node->nid = NULL;
