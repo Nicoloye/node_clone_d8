@@ -12,7 +12,10 @@ function clone_help($path, $arg) {
       $output .= '<p>'. t('Users with the "clone node" permission can utilize this functionality. A new tab will appear on node pages with the word "Clone".') .'</p>';
       return $output;
     case 'node/%/clone':
-      return t('This clone will not be saved to the database until you submit.');
+      $method = variable_get('clone_method', 'prepopulate');
+      if ($method == 'prepopulate') {
+        return t('This clone will not be saved to the database until you submit.');
+      }
   }
 }
 
@@ -32,17 +35,17 @@ function clone_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('clone_settings'),
     'title' => 'Clone module',
+    'file' => 'clone.pages.inc',
     'description' => 'Allows users to clone (copy then edit) an existing node.',
   );
   $items['node/%node/clone'] = array(
     'access callback' => 'clone_access',
     'access arguments' => array(1),
-    'page callback' => 'clone_node',
+    'page callback' => 'clone_node_check',
     'page arguments' => array(1),
     'title' => 'Clone',
     'weight' => 5,
-    'file' => 'node.pages.inc',
-    'file path' => drupal_get_path('module', 'node'),
+    'file' => 'clone.pages.inc',
     'type' => MENU_LOCAL_TASK,
   );
   return $items;
@@ -61,48 +64,8 @@ function clone_access($node) {
 }
 
 function clone_is_permitted($type) {
-  return !in_array($type, variable_get('clone_omitted', array()));
-}
-
-/**
- * menu callback to configure module settings.
- */
-function clone_settings() {
-
-  $form['heading'] = array(
-    '#value' => '<b>'. t('Configuration options for the clone module:') .'</b>',
-  );
-
-  $form['publishing'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?'),
-  );
-  $types = node_get_types('names');
-
-  foreach ($types as $type => $name) {
-    $form['publishing']['clone_reset_'. $type] = array(
-      '#type' => 'checkbox',
-      '#title' => t('@s: reset publishing options when cloned', array('@s' => $name)),
-      '#default_value' => variable_get('clone_reset_'. $type, FALSE),
-    );
-  }
-  // Need the variable default key to be something that's never a valid node type.
-  $types = array_merge( array('!' => "<". t("none") .">"), $types);
-  $form['clone_omitted'] = array(
-    '#type' => 'select',
-    '#title' => t('Omitted content types'),
-    '#default_value' => variable_get('clone_omitted', array('!')),
-    '#options' => $types,
-    '#description' => t('Select any node types which should <em>never</em> be cloned. Typically you should will want to select here all node types for which cloning fails (e.g. image nodes).'),
-    '#multiple' => TRUE
-  );
-
-  $form['clone_method'] = array(
-    '#type' => 'value',
-    '#value' => 'prepopulate',
-  );
-
-  return system_settings_form($form);
+  $omitted = variable_get('clone_omitted', array());
+  return empty($omitted[$type]);
 }
 
 /**
@@ -122,43 +85,6 @@ function clone_node_type($op, $type_obj) {
         }
       }
       break;
-  }
-}
-
-/**
- *  Clones a node - prepopulate a node editing form
- */
-function clone_node($node) {
-  if (isset($node->nid)) {
-    global $user;
-
-    if (clone_is_permitted($node->type)) {
-      // Let other modules do special fixing up.
-      // The function signature is: hook_clone_node_alter(&$node, $method)
-      // Where method is either 'prepopulate' or 'save-edit'.
-      drupal_alter("clone_node", $node, "prepopulate");
-
-      $node->nid = NULL;
-      $node->vid = NULL;
-      $node->name = $user->name;
-      $node->uid = $user->uid;
-      $node->created = NULL;
-      $node->menu = NULL;
-      $node->book['mlid'] = NULL;
-      $node->path = NULL;
-      $node->files = array();
-      $node->title = t('Clone of !title', array('!title' => $node->title));
-      drupal_set_title(check_plain($node->title));
-
-      if (variable_get('clone_reset_'. $node->type, FALSE)) {
-        $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-        // fill in the default values
-        foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
-          $node->$key = in_array($key, $node_options);
-        }
-      }
-      return  drupal_get_form($node->type .'_node_form', $node);
-    }
   }
 }
 
