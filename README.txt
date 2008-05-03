@@ -13,7 +13,7 @@ Users with the "clone node" permission can utilize this functionality. A new
 tab will appear on node pages with the word "clone".  The -2.x branch of this
 module works by pre-populating the node form, rather than immediately saving
 a copy of the original node to the database.  Thus, your node will not be
-saved until you hit "Sumit" (just like if you went to node/add/x).
+saved until you hit "Submit" (just like if you went to node/add/x).
 
 This module makes reasonable checks on access permissions.  A user cannot clone
 a node unless they can use the input format of that node, and unless they have
