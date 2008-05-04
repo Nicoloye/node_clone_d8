@@ -17,7 +17,14 @@ function clone_settings() {
     '#options' => array('prepopulate' => t('Pre-populate the node form fields'), 'save-edit' => t('Save as a new node then edit')),
     '#default_value' => variable_get('clone_method', 'prepopulate'),
   );
-
+  $form['basic']['clone_nodes_without_confirm'] = array(
+    '#type' => 'radios',
+    '#title' => t('Confirmation mode when using the "Save as a new node then edit" method'),
+    '#default_value' => (int)variable_get('clone_nodes_without_confirm', 0),
+    '#options' => array(t('Require confirmation (recommended)'), t('Bypass confirmation')),
+    '#description' => t('A new node may be saved immediately upon clicking the "clone" tab when viewing a node, bypassing the normal confirmation form.'),
+  );
+  
   $form['publishing'] = array(
     '#type' => 'fieldset',
     '#title' => t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?'),

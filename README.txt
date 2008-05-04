@@ -34,8 +34,8 @@ This module seems to work with common node types, however YMMV, especially with
 nodes that have any sort of image or file  attachments.   In all cases, but
 especially if you are using a complex (CCK) or custom node type, you should
 evaluate this module on a test site with a copy of your database before
-attempting to use it on a live site. On the setting page you may choose
-node typers to be omitted from the cloning mechanism - no users will be able
+attempting to use it on a live site. On the settings page you may choose
+node types to be omitted from the cloning mechanism - no users will be able
 to try to clone a node of an omitted type.
 
 To install this module, copy the folder with all the files to the
