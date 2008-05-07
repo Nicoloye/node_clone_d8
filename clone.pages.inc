@@ -9,7 +9,7 @@ function clone_settings() {
 
   $form['basic'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Basic configuration'),
+    '#title' => t('General settings'),
   );
   $form['basic']['clone_method'] = array(
     '#type' => 'radios',
