@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: node_clone 5.x\n"
-"POT-Creation-Date: 2008-05-04 11:34+0200\n"
-"PO-Revision-Date: 2008-05-04 12:01+0100\n"
+"POT-Creation-Date: 2008-08-12 22:18+0200\n"
+"PO-Revision-Date: 2008-08-12 22:19+0100\n"
 "Last-Translator: Alexander Hass\n"
 "Language-Team: Alexander Hass\n"
 "MIME-Version: 1.0\n"
@@ -13,10 +13,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Country: GERMANY\n"
 
-# General configuration
 #: clone.pages.inc:12
-msgid "Basic configuration"
-msgstr "Allgemeine Konfiguration"
+msgid "General settings"
+msgstr "Allgemeine Einstellungen"
 
 #: clone.pages.inc:16
 msgid "Method to use when cloning a node"
