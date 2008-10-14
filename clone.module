@@ -88,3 +88,13 @@ function clone_node_type($op, $type_obj) {
   }
 }
 
+/**
+* Implementation of hook_views_api.
+*/
+function clone_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'clone') .'/views',
+  );
+}
+
