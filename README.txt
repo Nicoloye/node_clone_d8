@@ -36,7 +36,13 @@ especially if you are using a complex (CCK) or custom node type, you should
 evaluate this module on a test site with a copy of your database before
 attempting to use it on a live site. On the settings page you may choose
 node types to be omitted from the cloning mechanism - no users will be able
-to try to clone a node of an omitted type.
+to clone a node of an omitted type.
+
+This module makes no attempt to respect field-level permissions set via
+CCK's Content Permissions module, or any other module that implements
+CCK field-level permissions hooks. You should test your configuration
+carefully or not allow access to the clone functionality for non-admins if
+you rely on field-level permissions for important site features.
 
 To install this module, copy the folder with all the files to the
 /sites/all/modules  OR /sites/default/modules directory of your Drupal 
