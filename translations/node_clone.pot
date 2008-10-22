@@ -4,14 +4,16 @@
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
 #  clone.pages.inc,v 1.3 2008/05/07 02:28:58 pwolanin
-#  clone.module,v 1.21 2008/05/03 21:50:58 pwolanin
+#  clone.module,v 1.23 2008/10/15 18:39:44 pwolanin
 #  clone.info,v 1.8 2008/04/09 01:14:24 pwolanin
+#  views_handler_field_node_link_clone.inc,v 1.1 2008/10/14 23:16:56 pwolanin
+#  clone.views.inc,v 1.1 2008/10/14 23:16:56 pwolanin
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2008-08-12 22:18+0200\n"
+"POT-Creation-Date: 2008-10-22 19:43+0200\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -120,7 +122,15 @@ msgstr ""
 msgid "Allows users to clone (copy then edit) an existing node."
 msgstr ""
 
-#: clone.module:0
+#: clone.module:0 views/views_handler_field_node_link_clone.inc:29
 msgid "clone"
+msgstr ""
+
+#: views/clone.views.inc:26
+msgid "Clone link"
+msgstr ""
+
+#: views/clone.views.inc:27
+msgid "Provide a simple link to clone the node."
 msgstr ""
 
