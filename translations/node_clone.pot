@@ -79,7 +79,7 @@ msgid "Are you sure you want to clone %title?"
 msgstr ""
 
 #: clone.pages.inc:90
-msgid "This action will create a new node. You willl then be redirected to the edit page for the new node."
+msgid "This action will create a new node. You will then be redirected to the edit page for the new node."
 msgstr ""
 
 #: clone.pages.inc:91 clone.module:46

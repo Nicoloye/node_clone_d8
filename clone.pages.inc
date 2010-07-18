@@ -87,7 +87,7 @@ function clone_node_confirm($form_state, $node) {
     $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
     return confirm_form($form,
       t('Are you sure you want to clone %title?', array('%title' =>  $node->title)),
-      'node/'. $node->nid, '<p>'. t('This action will create a new node. You willl then be redirected to the edit page for the new node.') .'</p>',
+      'node/'. $node->nid, '<p>'. t('This action will create a new node. You will then be redirected to the edit page for the new node.') .'</p>',
       t('Clone'), t('Cancel'));
 }
 

@@ -99,7 +99,7 @@ msgstr "Är du säker på att du vill klona %title?"
 
 #: clone.pages.inc:90
 msgid ""
-"This action will create a new node. You willl then be redirected to "
+"This action will create a new node. You will then be redirected to "
 "the edit page for the new node."
 msgstr "Denna åtgärd kommer att skapa en ny nod. Du kommer sedan att vidarebefordras till redigeringssidan för den nya noden."
 
