@@ -1,6 +1,6 @@
 $Id$
 
-README file for the clone module for Drupal 6.x.
+README file for the clone module for Drupal 7.x.
 
 The clone module allows users to make a copy of an existing node and then edit
 that copy. The authorship is set to the current user, the menu and url aliases
