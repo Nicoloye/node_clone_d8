@@ -123,6 +123,7 @@ function clone_node_clone_menu_link($node) {
       $link['plid'] = $old_link['plid'];
       $link['menu_name'] = $old_link['menu_name'];
       $link['weight'] = $old_link['weight'];
+      $link['module'] = $old_link['module'];
       return $link;
     }
   }
