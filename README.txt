@@ -1,4 +1,3 @@
-$Id$
 
 README file for the clone module for Drupal 7.x.
 

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Menu callback to configure module settings.
