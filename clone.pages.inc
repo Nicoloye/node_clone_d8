@@ -148,6 +148,7 @@ function clone_node_prepopulate($original_node) {
       $node->menu = clone_node_clone_menu_link($original_node);
       if (isset($node->book['mlid'])) {
         $node->book['mlid'] = NULL;
+        $node->book['has_children'] = 0;
       }
       $node->path = NULL;
       $node->files = array();
@@ -192,7 +193,10 @@ function clone_node_save($nid) {
       $node->uid = $user->uid;
       $node->created = NULL;
       $node->menu = clone_node_clone_menu_link($original_node);
-      $node->book['mlid'] = NULL;
+      if (isset($node->book['mlid'])) {
+        $node->book['mlid'] = NULL;
+        $node->book['has_children'] = 0;
+      }
       $node->path = NULL;
       $node->files = array();
       $node->title = t('Clone of !title', array('!title' => $node->title));
