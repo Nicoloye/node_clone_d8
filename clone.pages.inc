@@ -3,7 +3,7 @@
 /**
  * Menu callback to configure module settings.
  */
-function clone_settings() {
+function clone_settings($form, &$form_state) {
 
   $form['basic'] = array(
     '#type' => 'fieldset',
@@ -34,7 +34,7 @@ function clone_settings() {
     '#type' => 'fieldset',
     '#title' => t('Should the publishing options ( e.g. published, promoted, etc) be reset to the defaults?'),
   );
-  $types = node_get_types('names');
+  $types = node_type_get_names();
 
   foreach ($types as $type => $name) {
     $form['publishing']['clone_reset_'. $type] = array(
@@ -87,7 +87,7 @@ function clone_node_check($node) {
 /**
  *  form builder: prompt the user to confirm the operation
  */
-function clone_node_confirm($form_state, $node) {
+function clone_node_confirm($form, &$form_state, $node) {
 
     $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
     return confirm_form($form,
@@ -113,9 +113,10 @@ function clone_node_confirm_submit($form, &$form_state) {
  * Returns NULL if no existing link, or links are not to be cloned.
  */
 function clone_node_clone_menu_link($node) {
-  if (variable_get('clone_menu_links', FALSE)) {
+  if (variable_get('clone_menu_links', FALSE) && function_exists('menu_node_prepare')) {
     // This will fetch the existing menu link if the node had one.
-    node_invoke_nodeapi($node, 'prepare');
+    menu_node_prepare($node);
+
     if (!empty($node->menu['mlid'])) {
       $old_link = $node->menu;
       $link['link_title'] = t('Clone of !title', array('!title' => $old_link['link_title']));
@@ -137,7 +138,7 @@ function clone_node_prepopulate($original_node) {
     global $user;
 
     if (clone_is_permitted($original_node->type)) {
-      $node = drupal_clone($original_node);
+      $node = clone $original_node;
 
       $node->nid = NULL;
       $node->vid = NULL;
@@ -165,9 +166,11 @@ function clone_node_prepopulate($original_node) {
         }
       }
       // Let other modules do special fixing up.
-      // The function signature is: hook_clone_node_alter(&$node, $original_node, $method)
-      // Where $method is either 'prepopulate' or 'save-edit'.
-      drupal_alter("clone_node", $node, $original_node, "prepopulate");
+      // The function signature is: hook_clone_node_alter(&$node, $context)
+      // $context is an array with two elements, 'method' and 'original_node',
+      // where 'method' is either 'prepopulate' or 'save-edit'.
+      $context = array('method' => 'prepopulate', 'original_node' => $original_node);
+      drupal_alter('clone_node', $node, $context);
       // Make sure the file defining the node form is loaded.
       module_load_include('inc', 'node', 'node.pages');
       return drupal_get_form($node->type .'_node_form', $node);
@@ -184,7 +187,7 @@ function clone_node_save($nid) {
 
     $node = node_load($nid);
     if (isset($node->nid) && clone_is_permitted($node->type)) {
-      $original_node = drupal_clone($node);
+      $original_node = clone $node;
 
       $node->nid = NULL;
       $node->vid = NULL;
@@ -211,9 +214,11 @@ function clone_node_save($nid) {
         }
       }
       // Let other modules do special fixing up.
-      // The function signature is: hook_clone_node_alter(&$node, $original_node, $method)
-      // Where $method is either 'prepopulate' or 'save-edit'.
-      drupal_alter("clone_node", $node, $original_node, "save-edit");
+      // The function signature is: hook_clone_node_alter(&$node, $context)
+      // $context is an array with two elements, 'method' and 'original_node',
+      // where 'method' is either 'prepopulate' or 'save-edit'.
+      $context = array('method' => 'save-edit', 'original_node' => $original_node);
+      drupal_alter('clone_node', $node, $context);
 
       node_save($node);
       return $node->nid;
