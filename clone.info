@@ -1,3 +1,6 @@
 name = Clone module
 description = "Allows users to clone (copy then edit) an existing node."
 core = 7.x
+
+configure = admin/config/content/clone
+
