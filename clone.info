@@ -1,4 +1,4 @@
-name = Clone module
+name = "Node clone"
 description = "Allows users to clone (copy then edit) an existing node."
 core = 7.x
 
