@@ -162,7 +162,8 @@ function clone_node_prepopulate($original_node) {
         $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
         // Fill in the default values.
         foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
-          $node->$key = in_array($key, $node_options);
+          // Cast to int since that's how they come out of the DB.
+          $node->$key = (int) in_array($key, $node_options);
         }
       }
       // Let other modules do special fixing up.
@@ -210,7 +211,8 @@ function clone_node_save($nid) {
         $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
         // Fill in the default values.
         foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
-          $node->$key = in_array($key, $node_options);
+          // Cast to int since that's how they need to be saved to the DB.
+          $node->$key = (int) in_array($key, $node_options);
         }
       }
       // Let other modules do special fixing up.
