@@ -170,8 +170,10 @@ function clone_node_prepopulate($original_node) {
       $context = array('method' => 'prepopulate', 'original_node' => $original_node);
       drupal_alter('clone_node', $node, $context);
       // Make sure the file defining the node form is loaded.
-      module_load_include('inc', 'node', 'node.pages');
-      return drupal_get_form($node->type .'_node_form', $node);
+      $form_state = array();
+      $form_state['build_info']['args'] = array($node);
+      form_load_include($form_state, 'inc', 'node', 'node.pages');
+      return drupal_build_form($node->type .'_node_form', $form_state);
     }
   }
 }
