@@ -58,8 +58,7 @@ function clone_access_cloning($node) {
   $access = clone_is_permitted($node->type) && (user_access('clone node') || ($user->uid && ($node->uid == $user->uid) && user_access('clone own nodes')));
   // Make sure the user can view the original node content, and create a new one..
   $access = $access && node_access('view', $node) && node_access('create', $node->type);
-  // Let other modules alter this - for exmple to only allow some users
-  // to clone specific nodes or types.
+  // Let other modules alter this.
   drupal_alter("clone_access", $access, $node);
   return $access;
 }

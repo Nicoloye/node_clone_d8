@@ -167,9 +167,6 @@ function clone_node_prepopulate($original_node) {
         }
       }
       // Let other modules do special fixing up.
-      // The function signature is: hook_clone_node_alter(&$node, $context)
-      // $context is an array with two elements, 'method' and 'original_node',
-      // where 'method' is either 'prepopulate' or 'save-edit'.
       $context = array('method' => 'prepopulate', 'original_node' => $original_node);
       drupal_alter('clone_node', $node, $context);
       // Make sure the file defining the node form is loaded.
@@ -216,9 +213,6 @@ function clone_node_save($nid) {
         }
       }
       // Let other modules do special fixing up.
-      // The function signature is: hook_clone_node_alter(&$node, $context)
-      // $context is an array with two elements, 'method' and 'original_node',
-      // where 'method' is either 'prepopulate' or 'save-edit'.
       $context = array('method' => 'save-edit', 'original_node' => $original_node);
       drupal_alter('clone_node', $node, $context);
 
