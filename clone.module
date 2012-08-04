@@ -128,3 +128,21 @@ function clone_form_alter(&$form, $form_state, $form_id) {
     }
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function clone_form_node_admin_content_alter(&$form, $form_state, $form_id) {
+  $destination = drupal_get_destination();
+  // Expose a Clone operation on each node.
+  foreach($form['admin']['nodes']['#options'] as $nid => &$row){
+    $node = node_load($nid);
+    if (clone_access_cloning($node)) {
+      $row['operations']['data']['#links']['clone'] = array(
+        'title' => t('clone'),
+        'href' => 'node/' . $nid . '/clone',
+        'query' => $destination,
+      );
+    }
+  }
+}
