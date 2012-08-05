@@ -158,7 +158,7 @@ function clone_node_prepopulate($original_node) {
       $node->title = t('Clone of !title', array('!title' => $node->title));
       // Add an extra property as a flag.
       $node->clone_from_original_nid = $original_node->nid;
-      drupal_set_title(check_plain($node->title));
+      drupal_set_title($node->title);
 
       if (variable_get('clone_reset_'. $node->type, FALSE)) {
         $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
