@@ -143,7 +143,9 @@ function clone_node_prepopulate($original_node) {
       $node->nid = NULL;
       $node->vid = NULL;
       $node->tnid = NULL;
-      $node->name = $user->name;
+      // Anyonmymous users don't have a name.
+      // @see: drupal_anonymous_user().
+      $node->name = isset($user->name) ? $user->name : NULL;
       $node->uid = $user->uid;
       $node->created = NULL;
       $node->menu = clone_node_clone_menu_link($original_node);
@@ -192,7 +194,9 @@ function clone_node_save($nid) {
       $node->nid = NULL;
       $node->vid = NULL;
       $node->tnid = NULL;
-      $node->name = $user->name;
+      // Anyonmymous users don't have a name.
+      // @see: drupal_anonymous_user().
+      $node->name = isset($user->name) ? $user->name : NULL;
       $node->uid = $user->uid;
       $node->created = NULL;
       $node->menu = clone_node_clone_menu_link($original_node);
