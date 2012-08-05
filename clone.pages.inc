@@ -33,7 +33,7 @@ function clone_settings($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Use node type name in clone link'),
     '#default_value' => (int) variable_get('clone_use_node_type_name', 0),
-    '#description' => t('If checked, the link to clone the node will contain the node type name, for example, "Clone this Article", otherwise it will read "Clone content".'),
+    '#description' => t('If checked, the link to clone the node will contain the node type name, for example, "Clone this article", otherwise it will read "Clone content".'),
   );
 
   $form['publishing'] = array(
