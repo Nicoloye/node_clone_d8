@@ -45,9 +45,12 @@ function clone_menu() {
     'page callback' => 'clone_node_check',
     'page arguments' => array(1),
     'title' => 'Clone content',
+    'title callback' => 'clone_action_title',
+    'title arguments' => array(1),
     'weight' => 5,
     'file' => 'clone.pages.inc',
     'type' => MENU_LOCAL_ACTION,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   return $items;
 }
@@ -66,6 +69,17 @@ function clone_access_cloning($node) {
 function clone_is_permitted($type) {
   $omitted = variable_get('clone_omitted', array());
   return empty($omitted[$type]);
+}
+
+/**
+ * Menu title callback.
+ */
+function clone_action_title($node) {
+  // A hack to present a shorter title in contextual links.
+  if (current_path() != 'node/' . $node->nid) {
+    return t('Clone');
+  }
+  return t('Clone content');
 }
 
 /**
