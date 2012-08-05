@@ -106,10 +106,8 @@ function clone_node_type($op, $type_obj) {
   * Implements hook_views_api.
   */
 function clone_views_api() {
-  //TODO
-  return;
   return array(
-    'api' => 2,
+    'api' => 3,
     'path' => drupal_get_path('module', 'clone') .'/views',
   );
 }
