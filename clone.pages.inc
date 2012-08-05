@@ -29,6 +29,12 @@ function clone_settings($form, &$form_state) {
     '#default_value' => (int) variable_get('clone_menu_links', 0),
     '#description' => t('Should any menu link for a node also be cloned?'),
   ); 
+  $form['basic']['clone_use_node_type_name'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use node type name in clone link'),
+    '#default_value' => (int) variable_get('clone_use_node_type_name', 0),
+    '#description' => t('If checked, the link to clone the node will contain the node type name, for example, "Clone this Article", otherwise it will read "Clone content".'),
+  );
 
   $form['publishing'] = array(
     '#type' => 'fieldset',
