@@ -83,22 +83,21 @@ function clone_action_title($node) {
 }
 
 /**
- * Implementation of hook_mode_type().
+ * Implementation of hook_node_type_delete().
  */
-function clone_node_type($op, $type_obj) {
+function clone_node_type_delete($info) {
+  variable_del('clone_reset_'. $info->type);
+}
 
-  switch ($op) {
-    case 'delete':
-      variable_del('clone_reset_'. $type_obj->type);
-      break;
-    case 'update':
-      if (!empty($type_obj->old_type) && $type_obj->old_type != $type_obj->type) {
-        if (variable_get('clone_reset_'. $type_obj->old_type, FALSE)) {
-          variable_del('clone_reset_'. $type_obj->old_type);
-          variable_set('clone_reset_'. $type_obj->type, TRUE);
-        }
-      }
-      break;
+/**
+ * Implementation of hook_node_type_update().
+ */
+function clone_node_type_update($info) {
+  if (!empty($info->old_type) && $info->old_type != $info->type) {
+    if (variable_get('clone_reset_'. $info->old_type, FALSE)) {
+      variable_del('clone_reset_'. $info->old_type);
+      variable_set('clone_reset_'. $info->type, TRUE);
+    }
   }
 }
 
@@ -118,7 +117,7 @@ function clone_views_api() {
 function clone_admin_paths() {
   if (variable_get('node_admin_theme')) {
     $paths = array(
-      'node/*/clone' => TRUE, 
+      'node/*/clone' => TRUE,
     );
     return $paths;
   }
