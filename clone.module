@@ -146,8 +146,13 @@ function clone_form_node_form_alter(&$form, $form_state, $form_id) {
  */
 function clone_form_node_admin_content_alter(&$form, $form_state, $form_id) {
   $destination = drupal_get_destination();
+  // The property attribute changes in the $form array depending on the user role.
+  $property = isset($form['admin']['nodes']['#options']) ? '#options' : '#rows';
+  if (empty($form['admin']['nodes'][$property])) {
+    return;
+  }
   // Expose a Clone operation on each node.
-  foreach($form['admin']['nodes']['#options'] as $nid => &$row){
+  foreach($form['admin']['nodes'][$property] as $nid => &$row){
     $node = node_load($nid);
     if (clone_access_cloning($node)) {
       $row['operations']['data']['#links']['clone'] = array(
