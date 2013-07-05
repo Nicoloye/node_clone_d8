@@ -229,6 +229,9 @@ function clone_node_save($nid) {
       drupal_alter('clone_node', $node, $context);
 
       node_save($node);
+      if(module_exists('rules')) {
+        rules_invoke_event('clone_node', $node, $original_node);
+      }
       return $node->nid;
     }
   }
