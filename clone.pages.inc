@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Additional functions for Node_Clone module.
+ */
 
 /**
  * Menu callback to configure module settings.
@@ -28,7 +32,7 @@ function clone_settings($form, &$form_state) {
     '#options' => array(0 => t('No'), 1 => t('Yes')),
     '#default_value' => (int) variable_get('clone_menu_links', 0),
     '#description' => t('Should any menu link for a node also be cloned?'),
-  ); 
+  );
   $form['basic']['clone_use_node_type_name'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use node type name in clone link'),
@@ -43,10 +47,10 @@ function clone_settings($form, &$form_state) {
   $types = node_type_get_names();
 
   foreach ($types as $type => $name) {
-    $form['publishing']['clone_reset_'. $type] = array(
+    $form['publishing']['clone_reset_' . $type] = array(
       '#type' => 'checkbox',
       '#title' => t('@s: reset publishing options when cloned', array('@s' => $name)),
-      '#default_value' => variable_get('clone_reset_'. $type, FALSE),
+      '#default_value' => variable_get('clone_reset_' . $type, FALSE),
     );
   }
 
@@ -72,12 +76,12 @@ function clone_settings($form, &$form_state) {
 function clone_node_check($node) {
 
   $method = variable_get('clone_method', 'prepopulate');
-  
+
   switch ($method) {
     case 'save-edit':
       if (variable_get('clone_nodes_without_confirm', FALSE)) {
         $new_nid = clone_node_save($node->nid);
-        drupal_goto('node/'. $new_nid .'/edit');
+        drupal_goto('node/' . $new_nid . '/edit');
       }
       else {
         return drupal_get_form('clone_node_confirm', $node);
@@ -98,7 +102,7 @@ function clone_node_confirm($form, &$form_state, $node) {
     $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
     return confirm_form($form,
       t('Are you sure you want to clone %title?', array('%title' =>  $node->title)),
-      'node/'. $node->nid, '<p>'. t('This action will create a new node. You will then be redirected to the edit page for the new node.') .'</p>',
+      'node/' . $node->nid, '<p>' . t('This action will create a new node. You will then be redirected to the edit page for the new node.') . '</p>',
       t('Clone'), t('Cancel'));
 }
 
@@ -109,7 +113,7 @@ function clone_node_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     $new_nid = clone_node_save($form_state['values']['nid']);
   }
-  $form_state['redirect'] = 'node/'. $new_nid .'/edit';
+  $form_state['redirect'] = 'node/' . $new_nid . '/edit';
 }
 
 

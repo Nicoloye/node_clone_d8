@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Views field handler for Node_Clone module.
+ */
 
 /**
 * Field handler to present a clone node link.
