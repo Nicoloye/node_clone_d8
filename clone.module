@@ -43,9 +43,9 @@ function clone_menu() {
     'file' => 'clone.pages.inc',
     'description' => 'Allows users to clone (copy then edit) an existing node.',
   );
-  $items['node/%node/clone'] = array(
+  $items['node/%node/clone/%clone_token'] = array(
     'access callback' => 'clone_access_cloning',
-    'access arguments' => array(1),
+    'access arguments' => array(1, TRUE, 3),
     'page callback' => 'clone_node_check',
     'page arguments' => array(1),
     'title' => 'Clone content',
@@ -59,8 +59,22 @@ function clone_menu() {
   return $items;
 }
 
-function clone_access_cloning($node) {
+function clone_token_to_arg($arg = NULL, $map = NULL, $index = NULL) {
+  // Supply CSRF token if needed.
+  if (variable_get('clone_nodes_without_confirm', FALSE)) {
+    return drupal_get_token('clone_access_cloning');
+  }
+  return 'confirm';
+}
+
+function clone_access_cloning($node, $check_token = FALSE, $token = FALSE) {
   global $user;
+  // Check CSRF token if needed.
+  if ($check_token) {
+    if (!$token || $token !== clone_token_to_arg()) {
+      return FALSE;
+    }
+  }
   // Check basic permissions first.
   $access = clone_is_permitted($node->type) && (user_access('clone node') || ($user->uid && ($node->uid == $user->uid) && user_access('clone own nodes')));
   // Make sure the user can view the original node content, and create a new one..
@@ -124,7 +138,7 @@ function clone_views_api() {
 function clone_admin_paths() {
   if (variable_get('node_admin_theme')) {
     $paths = array(
-      'node/*/clone' => TRUE,
+      'node/*/clone/*' => TRUE,
     );
     return $paths;
   }
@@ -161,7 +175,7 @@ function clone_form_node_admin_content_alter(&$form, $form_state, $form_id) {
     if (clone_access_cloning($node)) {
       $row['operations']['data']['#links']['clone'] = array(
         'title' => t('clone'),
-        'href' => 'node/' . $nid . '/clone',
+        'href' => 'node/' . $nid . '/clone/' . clone_token_to_arg(),
         'query' => $destination,
       );
     }
