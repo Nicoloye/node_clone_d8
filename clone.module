@@ -181,3 +181,104 @@ function clone_form_node_admin_content_alter(&$form, $form_state, $form_id) {
     }
   }
 }
+
+/**
+ * Implements hook_action_info().
+ */
+function clone_action_info() {
+  return array(
+    'clone_action_clone' => array(
+      'type' => 'node',
+      'label' => t('Clone item'),
+      'configurable' => TRUE,
+      'hooks' => array('any' => TRUE),
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+/**
+ * Action callback.
+ */
+function clone_action_clone($original_node, $context) {
+  module_load_include('inc', 'clone', 'clone.pages');
+  if (clone_is_permitted($original_node->type)) {
+    $val = !empty($context['clone_context']) ? $context['clone_context'] : array();
+    $node = _clone_node_prepare($original_node, !empty($val['prefix_title']));
+    if (isset($val['substitute_from']) && strlen($val['substitute_from']) && isset($val['substitute_to'])) {
+      $i = (!empty($val['substitute_case_insensitive']) ? 'i' : '');
+      $pattern = '#'. strtr($val['substitute_from'], array('#' => '\#')) . '#' . $i;
+      foreach (array('title') as $property) {
+        $new = preg_replace($pattern, $val['substitute_to'], $node->{$property});
+        if ($new) {
+          $node->{$property} = $new;
+        }
+      }
+      foreach (array('body') as $property) {
+        foreach($node->{$property} as $lang => $row) {
+          foreach ($row as $delta => $data) {
+            foreach (array('value', 'summary') as $key) {
+              if (isset($node->{$property}[$lang][$delta][$key])) {
+                $new = preg_replace($pattern, $val['substitute_to'], $node->{$property}[$lang][$delta][$key]);
+                if ($new) {
+                  $node->{$property}[$lang][$delta][$key] = $new;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    // Let other modules do special fixing up.
+    $context = array('method' => 'action', 'original_node' => $original_node);
+    drupal_alter('clone_node', $node, $context);
+    node_save($node);
+    if (module_exists('rules')) {
+      rules_invoke_event('clone_node', $node, $original_node);
+    }
+  }
+  else {
+    drupal_set_message(t('Clone failed for %title : not permitted for nodes of type %type', array('%title' => $original_node->title, '%type' => $original_node->type)), 'warning');
+  }
+}
+
+/**
+ * Action form.
+ */
+function clone_action_clone_form($context) {
+ $form['clone_context'] = array(
+   '#tree' => TRUE,
+ );
+ $form['clone_context']['prefix_title'] = array(
+    '#title' => t('Prefix title'),
+    '#type' => 'checkbox',
+    '#description' => t('Should cloned node tiles be prefixed?'),
+    '#default_value' => isset($context['clone_context']['prefix_title']) ? $context['clone_context']['prefix_title'] : 1,
+  );
+ $form['clone_context']['substitute_from'] = array(
+    '#title' => t('Substitute from string'),
+    '#type' => 'textfield',
+    '#description' => t('String (or regex) to substitute from in title and body.'),
+    '#default_value' => isset($context['clone_context']['substitue_from']) ? $context['clone_context']['substitue_from'] : '',
+  );
+ $form['clone_context']['substitute_to'] = array(
+    '#title' => t('Substitute to string'),
+    '#type' => 'textfield',
+    '#description' => t('String (or regex) to substitute to in title and body.'),
+    '#default_value' => isset($context['clone_context']['substitue_to']) ?  $context['clone_context']['substitue_to'] : '',
+  );
+ $form['clone_context']['substitute_case_insensitive'] = array(
+    '#title' => t('Case insensitive substitution'),
+    '#type' => 'checkbox',
+    '#description' => t('Should the substituion match be case insensitive?'),
+    '#default_value' => isset($context['clone_context']['substitute_case_insensitive']) ? $context['clone_context']['substitute_case_insensitive'] : NULL,
+  );
+  return $form;
+}
+
+/**
+ * Action form submit.
+ */
+function clone_action_clone_submit($form, $form_state) {
+  return array('clone_context' => $form_state['values']['clone_context']);
+}

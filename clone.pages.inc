@@ -148,36 +148,8 @@ function clone_node_prepopulate($original_node) {
     global $user;
 
     if (clone_is_permitted($original_node->type)) {
-      $node = clone $original_node;
-
-      $node->nid = NULL;
-      $node->vid = NULL;
-      $node->tnid = NULL;
-      // Anyonmymous users don't have a name.
-      // @see: drupal_anonymous_user().
-      $node->name = isset($user->name) ? $user->name : NULL;
-      $node->uid = $user->uid;
-      $node->created = NULL;
-      $node->menu = clone_node_clone_menu_link($original_node);
-      if (isset($node->book['mlid'])) {
-        $node->book['mlid'] = NULL;
-        $node->book['has_children'] = 0;
-      }
-      $node->path = NULL;
-      $node->files = array();
-      $node->title = t('Clone of !title', array('!title' => $node->title));
-      // Add an extra property as a flag.
-      $node->clone_from_original_nid = $original_node->nid;
+      $node = _clone_node_prepare($original_node, TRUE, $user->uid);
       drupal_set_title($node->title);
-
-      if (variable_get('clone_reset_'. $node->type, FALSE)) {
-        $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-        // Fill in the default values.
-        foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
-          // Cast to int since that's how they come out of the DB.
-          $node->$key = (int) in_array($key, $node_options);
-        }
-      }
       // Let other modules do special fixing up.
       $context = array('method' => 'prepopulate', 'original_node' => $original_node);
       drupal_alter('clone_node', $node, $context);
@@ -198,46 +170,58 @@ function clone_node_save($nid) {
     global $user;
 
     $original_node = node_load($nid);
-    if (isset($original_node->nid) && clone_is_permitted($original_node->type)) {
-      $node = clone $original_node;
-
-      $node->nid = NULL;
-      $node->vid = NULL;
-      $node->tnid = NULL;
-      // Anyonmymous users don't have a name.
-      // @see: drupal_anonymous_user().
-      $node->name = isset($user->name) ? $user->name : NULL;
-      $node->uid = $user->uid;
-      $node->created = NULL;
-      $node->menu = clone_node_clone_menu_link($original_node);
-      if (isset($node->book['mlid'])) {
-        $node->book['mlid'] = NULL;
-        $node->book['has_children'] = 0;
-      }
-      $node->path = NULL;
-      $node->files = array();
-      $node->title = t('Clone of !title', array('!title' => $node->title));
-      // Add an extra property as a flag.
-      $node->clone_from_original_nid = $original_node->nid;
-
-      if (variable_get('clone_reset_'. $node->type, FALSE)) {
-        $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-        // Fill in the default values.
-        foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
-          // Cast to int since that's how they need to be saved to the DB.
-          $node->$key = (int) in_array($key, $node_options);
-        }
-      }
+    if (isset($node->nid) && clone_is_permitted($original_node->type)) {
+      $node = _clone_node_prepare($original_node, TRUE, $user->uid);
       // Let other modules do special fixing up.
       $context = array('method' => 'save-edit', 'original_node' => $original_node);
       drupal_alter('clone_node', $node, $context);
 
       node_save($node);
-      if(module_exists('rules')) {
+      if (module_exists('rules')) {
         rules_invoke_event('clone_node', $node, $original_node);
       }
       return $node->nid;
     }
   }
+}
+
+/**
+ *  Prepares a node to be cloned.
+ */
+function _clone_node_prepare($original_node, $prefix_title = FALSE, $uid = NULL) {
+  $node = clone $original_node;
+
+  $node->nid = NULL;
+  $node->vid = NULL;
+  $node->tnid = NULL;
+  // Anyonmymous users don't have a name.
+  // @see: drupal_anonymous_user().
+  $node->name = isset($user->name) ? $user->name : NULL;
+  if ($uid) {
+    $node->uid = $uid;
+  }
+  $node->created = NULL;
+  $node->menu = clone_node_clone_menu_link($original_node);
+  if (isset($node->book['mlid'])) {
+    $node->book['mlid'] = NULL;
+    $node->book['has_children'] = 0;
+  }
+  $node->path = NULL;
+  $node->files = array();
+  if ($prefix_title) {
+    $node->title = t('Clone of !title', array('!title' => $node->title));
+  }
+  // Add an extra property as a flag.
+  $node->clone_from_original_nid = $original_node->nid;
+
+  if (variable_get('clone_reset_'. $node->type, FALSE)) {
+    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+    // Fill in the default values.
+    foreach (array('status', 'moderate', 'promote', 'sticky', 'revision') as $key) {
+      // Cast to int since that's how they need to be saved to the DB.
+      $node->$key = (int) in_array($key, $node_options);
+    }
+  }
+  return $node;
 }
 
