@@ -197,9 +197,9 @@ function clone_node_save($nid) {
   if (is_numeric($nid)) {
     global $user;
 
-    $node = node_load($nid);
-    if (isset($node->nid) && clone_is_permitted($node->type)) {
-      $original_node = clone $node;
+    $original_node = node_load($nid);
+    if (isset($original_node->nid) && clone_is_permitted($original_node->type)) {
+      $node = clone $original_node;
 
       $node->nid = NULL;
       $node->vid = NULL;
