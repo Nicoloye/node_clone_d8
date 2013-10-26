@@ -194,6 +194,11 @@ function _clone_node_prepare($original_node, $prefix_title = FALSE, $uid = NULL)
   $node->nid = NULL;
   $node->vid = NULL;
   $node->tnid = NULL;
+  $node->log = NULL;
+  // Also handle modules that attach a UUID to the node.
+  $node->uuid = NULL;
+  $node->vuuid = NULL;
+
   // Anyonmymous users don't have a name.
   // @see: drupal_anonymous_user().
   $node->name = isset($user->name) ? $user->name : NULL;
