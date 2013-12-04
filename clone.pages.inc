@@ -149,10 +149,9 @@ function clone_node_clone_menu_link($node) {
  */
 function clone_node_prepopulate($original_node) {
   if (isset($original_node->nid)) {
-    global $user;
 
     if (clone_is_permitted($original_node->type)) {
-      $node = _clone_node_prepare($original_node, TRUE, $user->uid);
+      $node = _clone_node_prepare($original_node, TRUE);
       drupal_set_title($node->title);
       // Let other modules do special fixing up.
       $context = array('method' => 'prepopulate', 'original_node' => $original_node);
@@ -169,13 +168,12 @@ function clone_node_prepopulate($original_node) {
 /**
  *  Clones a node by directly saving it.
  */
-function clone_node_save($nid) {
+function clone_node_save($nid, $account = NULL) {
   if (is_numeric($nid)) {
-    global $user;
 
     $original_node = node_load($nid);
     if (isset($original_node->nid) && clone_is_permitted($original_node->type)) {
-      $node = _clone_node_prepare($original_node, TRUE, $user->uid);
+      $node = _clone_node_prepare($original_node, TRUE, $account);
       // Let other modules do special fixing up.
       $context = array('method' => 'save-edit', 'original_node' => $original_node);
       drupal_alter('clone_node', $node, $context);
@@ -192,8 +190,12 @@ function clone_node_save($nid) {
 /**
  *  Prepares a node to be cloned.
  */
-function _clone_node_prepare($original_node, $prefix_title = FALSE, $uid = NULL) {
+function _clone_node_prepare($original_node, $prefix_title = FALSE, $account = NULL) {
   $node = clone $original_node;
+
+  if (!isset($account->uid)) {
+    $account = $GLOBALS['user'];
+  }
 
   $node->nid = NULL;
   $node->vid = NULL;
@@ -205,10 +207,9 @@ function _clone_node_prepare($original_node, $prefix_title = FALSE, $uid = NULL)
 
   // Anyonmymous users don't have a name.
   // @see: drupal_anonymous_user().
-  $node->name = isset($user->name) ? $user->name : NULL;
-  if ($uid) {
-    $node->uid = $uid;
-  }
+  $node->name = isset($account->name) ? $account->name : NULL;
+  $node->uid = $account->uid;
+
   $node->created = NULL;
   $node->menu = clone_node_clone_menu_link($original_node);
   if (isset($node->book['mlid'])) {
