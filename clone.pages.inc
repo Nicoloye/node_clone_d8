@@ -170,7 +170,7 @@ function clone_node_save($nid) {
     global $user;
 
     $original_node = node_load($nid);
-    if (isset($node->nid) && clone_is_permitted($original_node->type)) {
+    if (isset($original_node->nid) && clone_is_permitted($original_node->type)) {
       $node = _clone_node_prepare($original_node, TRUE, $user->uid);
       // Let other modules do special fixing up.
       $context = array('method' => 'save-edit', 'original_node' => $original_node);
