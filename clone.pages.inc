@@ -81,7 +81,11 @@ function clone_node_check($node) {
     case 'save-edit':
       if (variable_get('clone_nodes_without_confirm', FALSE)) {
         $new_nid = clone_node_save($node->nid);
-        drupal_goto('node/' . $new_nid . '/edit');
+        $options = array();
+        if (!empty($_GET['node-clone-destination'])) {
+          $options['query']['destination'] = $_GET['node-clone-destination'];
+        }
+        drupal_goto('node/' . $new_nid . '/edit', $options);
       }
       else {
         return drupal_get_form('clone_node_confirm', $node);
