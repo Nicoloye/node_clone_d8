@@ -64,7 +64,7 @@ function clone_settings($form, &$form_state) {
     '#title' => t('Omitted content types'),
     '#default_value' => variable_get('clone_omitted', array()),
     '#options' => $types,
-    '#description' => t('Select any node types which should <em>never</em> be cloned. Typically you should will want to select here all node types for which cloning fails (e.g. image nodes).'),
+    '#description' => t('Select any node types which should <em>never</em> be cloned. In other words, all node types where cloning will fail.'),
   );
 
   return system_settings_form($form);
