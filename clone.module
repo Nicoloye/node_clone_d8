@@ -59,10 +59,34 @@ function clone_menu() {
   return $items;
 }
 
-function clone_token_to_arg($arg = NULL, $map = NULL, $index = NULL) {
+/**
+ * Implements a to_arg function for the clone local action.
+ *
+ * @param string $arg
+ *   The current argument value.
+ * @param array $map
+ *   The path arguments.
+ *
+ * @return string
+ *   Either 'confirm' or a CSRF token.
+ */
+function clone_token_to_arg($arg, $map) {
   // Supply CSRF token if needed.
+  return clone_get_token($map[1]);
+}
+
+/**
+ * Get the token that needs to be added to the clone link.
+ *
+ * @param int $nid
+ *   The node ID of the node to be cloned
+ *
+ * @return string
+ *   Either 'confirm' or a CSRF token.
+ */
+function clone_get_token($nid) {
   if (variable_get('clone_nodes_without_confirm', FALSE)) {
-    return drupal_get_token('clone_access_cloning');
+    return drupal_get_token('clone_access_cloning-' . $nid);
   }
   return 'confirm';
 }
@@ -71,7 +95,7 @@ function clone_access_cloning($node, $check_token = FALSE, $token = FALSE) {
   global $user;
   // Check CSRF token if needed.
   if ($check_token) {
-    if (!$token || $token !== clone_token_to_arg()) {
+    if (!$token || $token !== clone_get_token($node->nid)) {
       return FALSE;
     }
   }
@@ -175,7 +199,7 @@ function clone_form_node_admin_content_alter(&$form, $form_state, $form_id) {
     if (clone_access_cloning($node)) {
       $row['operations']['data']['#links']['clone'] = array(
         'title' => t('clone'),
-        'href' => 'node/' . $nid . '/clone/' . clone_token_to_arg(),
+        'href' => 'node/' . $nid . '/clone/' . clone_get_token($nid),
         'query' => $destination,
       );
     }

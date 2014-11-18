@@ -25,6 +25,12 @@ function clone_settings($form, &$form_state) {
     '#default_value' => (int)variable_get('clone_nodes_without_confirm', 0),
     '#options' => array(t('Require confirmation (recommended)'), t('Bypass confirmation')),
     '#description' => t('A new node may be saved immediately upon clicking the "clone" link when viewing a node, bypassing the normal confirmation form.'),
+    '#states' => array(
+      // Only show this field when the clone method is save-edit.
+      'visible' => array(
+        ':input[name="clone_method"]' => array('value' => 'save-edit'),
+      ),
+    ),
   );
   $form['basic']['clone_menu_links'] = array(
     '#type' => 'radios',
