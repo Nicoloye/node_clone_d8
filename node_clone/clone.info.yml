@@ -1,0 +1,8 @@
+name: Node clone
+type: module
+description: 'Allows users to clone (copy then edit) an existing node.'
+package: Content
+version: VERSION
+core: 8.x
+configure: admin/config/content/clone
+#files[] = views/views_handler_field_node_link_clone.inc

@@ -1,0 +1,25 @@
+# Static routes
+node_clone.admin:
+  path: 'admin/config/content/clone'
+  defaults:
+    _form: '\Drupal\node_clone\Forms\CloneSettingsForm'
+    _title: 'Node clone settings'
+  requirements:
+    _permission: 'node clone admin'
+
+node_clone.clone:
+  path: 'node/{node}/clone'
+  defaults:
+    _entity_form: 'node.clone'
+  requirements:
+    _permission: 'node clone node'
+  options:
+    _admin_route: TRUE
+
+node_clone.clone_token:
+  path: 'node/{node}/clone/{clone_token}'
+  defaults:
+    _content: '\Drupal\node_clone\Controller\CloneController::cloneContent'
+    _title: 'Clone content'
+  requirements:
+    _permission: 'node clone node'

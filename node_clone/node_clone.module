@@ -1,0 +1,53 @@
+<?php
+/**
+ * @file
+ * Allow users to make a copy of an item of content (a node) and then edit that copy.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function node_clone_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#clone':
+      $output = '<p>' . t('The clone module allows users to make a copy of an existing node and then edit that copy. The authorship is set to the current user, the menu and url aliases are reset, and the words "Clone of" are inserted into the title to remind you that you are not editing the original node.') . '</p>';
+      $output .= '<p>' . t('Users with the "clone node" permission can utilize this functionality. A new tab will appear on node pages with the word "Clone".') . '</p>';
+      return $output;
+    case 'node/%/clone':
+//      $method = variable_get('clone_method', 'prepopulate');
+      if ($method == 'prepopulate') {
+        return t('This clone will not be saved to the database until you submit.');
+      }
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function node_clone_permission() {
+  return array(
+    'node clone node' => array('title' => t('Clone any content')),
+    'node clone admin' => array('title' => t('Administer node clone')),
+  );
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function node_clone_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  // Add a form controller for clone operations.
+  $entity_types['node']->setFormClass('clone', 'Drupal\node_clone\NodeCloneForm');
+}
+
+/**
+ * Implements hook_menu_local_actions_alter().
+ */
+function node_clone_menu_local_actions_alter(&$local_actions) {
+  $node = \Drupal::request()->attributes->get('node');
+  $config = \Drupal::config('node_clone.settings');
+  if ($config->get('clone_use_node_type_name')) {
+    $local_actions['node_clone.clone']['title'] = 'Clone this '. node_type_get_names()[$node->getType()];
+  }
+
+}
