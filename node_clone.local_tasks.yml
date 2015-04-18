@@ -1,0 +1,4 @@
+node_clone.admin:
+  route_name: node_clone.admin
+  title: 'Node clone settings'
+  base_route: node_clone.admin

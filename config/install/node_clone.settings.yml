@@ -1,0 +1,4 @@
+clone_method: 'prepopulate'
+clone_nodes_without_confirm: '0'
+clone_menu_links: 0
+clone_use_node_type_name: 0

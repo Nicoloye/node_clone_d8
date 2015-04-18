@@ -1,0 +1,5 @@
+node_clone.clone:
+  title: 'Clone content'
+  route_name: node_clone.clone
+  appears_on:
+   - node.view

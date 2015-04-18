@@ -1,0 +1,5 @@
+node_clone.admin:
+  title: 'Node Clone'
+  description: 'Allows users to clone (copy then edit) an existing node.'
+  parent: system.admin_config_content
+  route_name: node_clone.admin
